@@ -13,9 +13,16 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/login/matrix-login.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/login/font-awesome.css" />
 <script type="text/javascript" src="${pageContext.request.contextPath}/login/js/jquery-1.5.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/Jquery-V3.2.1.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.cookie.js"></script>
 <!-- 软键盘控件start -->
 <link href="${pageContext.request.contextPath}/login/keypad/css/framework/form.css" rel="stylesheet" type="text/css"/>
 <!-- 软键盘控件end -->
+<!-- 弹窗 -->
+<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/js/ui.js"></script>
+<!-- 弹窗 -->
+
  <style type="text/css">
 	
       .cavs{
@@ -62,12 +69,33 @@
 			$("#windows2").show();
 		}
 		
+		//设置cookie
+		function setCookie(name,value,expires) {
+			//设置过期时间
+			var date = new Date();
+			date.setDate(date.getDate()+expires);//设置时间
+			document.cookie = name + "=" + value + ";expires=" + date;
+		}
+		
+		//获取cookie
+		function getCookie(data) {
+			//将字符串转换成数组形式
+			var arrStr = document.cookie.split(";");
+			for (var i = 0; i < arrStr.length; i++) {
+				var arr = arrStr[i].split("=");
+				if(arr[0]==data){
+					return arr[1];
+				}
+			}
+			return "";
+		}
+		
 		//注册
 		function rcheck(){
 			if($("#USERNAME").val()==""){
 				$("#USERNAME").tips({
 					side:3,
-		            msg:'输入用户名',
+		            msg:'输入手机号',
 		            bg:'#AE81FF',
 		            time:2
 		        });
@@ -119,22 +147,29 @@
 			}
 			return true;
 		}
+		//cookie自动填充手机号
+		$(function(){
+			$("#loginname").attr("value",getCookie("dataKey"));
+		})
+		
 		//提交注册
 		function register(){
 			if(rcheck()){
 				$.post("${pageContext.request.contextPath}/user/regist",$("#registForm").serialize(),function(data){
 					if(data.result == "1"){
-						alert("恭喜注册成功！快去登陆吧！");
-						window.location.href='login';
+						mizhu.toast('恭喜注册成功！快去登陆吧！');
+						var qd = setTimeout("window.location.href='login'",2000);
+						//保存cookie
+						setCookie("dataKey",data.phone,10);
 					}else{
-						alert("验证码不正确!");
+						mizhu.toast('验证码不正确!');
 					}
 				
 				},"json");
 			}
 			
 		}
-		
+
 		var isPhone = 1;
 		//验证手机号码
 		function checkPhone(){
@@ -142,7 +177,7 @@
 			var pattern = /^1[0-9]{10}$/;
 			isPhone = 1;
 			if(!pattern.test(phone)){
-				alert('请输入正确的手机号码');
+				mizhu.toast('手机号格式不正确！');
 				isPhone = 0;
 				return;
 			}
@@ -154,8 +189,8 @@
 			if(isPhone){
 				$.post("${pageContext.request.contextPath}/user/sendMessage",$("#registForm").serialize(),function(data){
 					if(data == "1"){
-						alert("用户已经存在！返回直接登陆哦！");
-						window.location.href='login';
+						mizhu.toast('用户已经存在！返回直接登陆哦！');
+						var lg = setTimeout("window.location.href='login'",2000);
 					}else{
 						resetCode(); //倒计时
 					}
@@ -188,7 +223,6 @@
 
 </head>
 <body>
-	
 	<!--小键盘承载器-->
 	<canvas class="cavs"></canvas>
 	<div style="width:100%;height:300px;text-align: center;margin: 0 auto;position: absolute;">
@@ -237,6 +271,7 @@
 							onclick="savePaw();" style="padding-top:0px;" />
 					</div>
 				</div>
+				<div class="alert toast" style="display: none" id="alertMsg" onclick="mizhu.toast('账号或密码错误！');"></div>
 				<div class="form-actions">
 					<div style="width:86%;padding-left:8%;">
 
@@ -375,19 +410,19 @@
 				$("#password").focus();
 				return false;
 			}
-// 	    document.getElementById('msg').innerHTML = '登录成功！'
 	    $.post("${pageContext.request.contextPath}/user/login",$("#loginForm").serialize(),function(data){
 	    	if(data.login == "1"){
 	    		//验证通过
-	    		$("#msg").css("color","green").html("登陆成功！");
-	    		window.location.href='index';
+	    		mizhu.toast('登陆成功！');
+	    		var s = setTimeout("window.location.href='index'",2000); 
 	    	}else{
 	    		//账号密码错误
-	    		$("#msg").css("color","red").html("账号或密码错误,请重新填写！");
-	    		var t=setTimeout("location.reload()",2000);
+	    		mizhu.toast('账号或密码错误！');
+	    		var t = setTimeout("location.reload()",2000);
 	    	}
 	    },"json");
 	  })
 	</script>
+	
 </body>
 </html>

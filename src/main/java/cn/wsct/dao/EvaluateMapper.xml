@@ -6,6 +6,10 @@
     <result column="sm_id" property="smId" jdbcType="INTEGER" />
     <result column="e_comment" property="eComment" jdbcType="VARCHAR" />
   </resultMap>
+  <select id="selectEvaluate" resultType="map">
+  	SELECT us.u_telephone,ev.e_comment,sh.s_shopName,sm.sm_image,sm.sm_dishName FROM `evaluate` AS ev LEFT JOIN `user` AS us on us.u_telephone = ev.u_telephone LEFT JOIN shop_menu AS sm ON sm.sm_id = ev.sm_id LEFT JOIN shop AS sh ON sh.s_id = sm.s_id;
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

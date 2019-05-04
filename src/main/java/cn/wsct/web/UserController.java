@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +48,7 @@ public class UserController {
 	//注册
 	@ResponseBody
 	@RequestMapping("/regist")
-	public Map<String, Object> registUser(String telephone,String password,String rcode){
+	public Map<String, Object> registUser(String telephone,String password,String rcode,HttpServletResponse resp){
 		Map<String, Object> map = new HashMap<>();
 		if(rcode != null && !rcode.equals("")) {
 			int rcodes = Integer.parseInt(rcode);
@@ -55,6 +57,10 @@ public class UserController {
 				if(!telephone.equals("") && !password.equals("")) {
 					int result = userService.registUser(telephone, password);
 					map.put("result", result);
+					map.put("phone", telephone);
+					//
+					Cookie cookie = new Cookie("dataKey", telephone);
+					resp.addCookie(cookie);
 				}
 				
 			}else {

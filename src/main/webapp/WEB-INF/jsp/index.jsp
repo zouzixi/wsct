@@ -19,13 +19,241 @@
 <script src="${pageContext.request.contextPath}/js/distpicker.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
 <!-- 省市区联动插件，勿动 -->
+<script src="${pageContext.request.contextPath}/js/scroll.js"></script>
+<!-- 获取省份 -->
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script> 
+<script type="text/javascript">  
+var cname = returnCitySN["cname"];	//定义城市
+
+</script>
 <script>
-	
+	$(function(){
+		//公告栏
+		$.post("${pageContext.request.contextPath}/index/selectList",function(data){
+			var html = "";
+			var html_status = "";
+			$.each(data.list,function(i,v){
+ 				if(this.oStatus == "1"){
+ 					//订单已发货
+					html_status = "<i class='State01'>"+"已发货"+"</i>";
+ 				}else if(this.oStatus == "2"){
+ 					//已完成
+					html_status = "<i class='State02'>"+"已签收"+"</i>"+"<i class='State03'>"+"已点评"+"</i>";
+ 				}
+				
+				html +="<li>"+
+				   "<p>订单编号："+ this.oId + "</p>"+
+				   "<p>收件人："+this.oUsername+"</p>"+
+				   "<p>订单状态："+html_status+"</p>"+
+				   "</li>";
+			})
+			$("#UpRoll").html(html);	
+		},"json");
+		//轮播
+		$('.myscroll').myScroll({
+			speed: 40, //数值越大，速度越慢
+			rowHeight: 85 //li的高度
+		});		
+		
+		//读取城市地区
+		$.post("${pageContext.request.contextPath}/index/selectRegions",function(data){
+			var html = "";
+			$.each(data.list,function(i,v){
+				html += "<a href='#'>"+this.rCity+" </a>";
+			});
+			$("#regions").append(html);
+			$("#seekareas").append(html);
+		},"json");
+		
+		//随机菜品展示
+		$.post("${pageContext.request.contextPath}/index/selectShopMenu",function(data){
+			var html = "";
+			$.each(data.list,function(i,v){
+				html += "<a href='#' target='_blank' title='菜品名称'>"+
+			      			"<figure>"+
+			       			"<img src='${pageContext.request.contextPath}/"+this.smImage+"' />"+
+			       			"<figcaption>"+
+			       			"<span class='title'>"+this.smDishname+"</span>"+
+			       			"<span class='price'><i>￥</i>"+this.smPrice+"</span>"+
+			       			"</figcaption>"+
+			      			"</figure>"+
+			      			"</a>";
+			});
+			$(".SCcontent").html(html);
+		},"json");	
+		
+		//随机商铺展示
+		$.post("${pageContext.request.contextPath}/index/selectShop",function(data){
+			var html = "";
+			$.each(data.list,function(i,v){
+				html += "<a href='#' target='_blank' title='店铺名称'>"+
+			      			"<figure>"+
+			       			"<img src='${pageContext.request.contextPath}/"+this.sImage+"'>"+
+			      			"</figure>"+
+						"</a>";
+			})
+			$(".bestshop").html(html);
+		},"json");
+		//
+		$.post("${pageContext.request.contextPath}/index/selectShops",function(data){
+			var shtml = "";
+			var scorehtml = "";
+			$.each(data.list,function(i,v){
+				var sScore = this.sScore;
+				if(this.sScore == "0"){
+					for (var i = 0; i < 5; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}
+				}else if(this.sScore == "1"){
+					for (var i = 0; i < sScore; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-on.png'>";
+					}
+					for (var j = 0; j < 5-sScore; j++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}
+				}else if(this.sScore == "2"){
+					for (var i = 0; i < sScore; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-on.png'>";
+					}
+					for (var j = 0; j < 5-sScore; j++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}
+				}else if(this.sScore == "3"){
+					for (var i = 0; i < sScore; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-on.png'>";
+					}
+					for (var j = 0; j < 5-sScore; j++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}					
+				}else if(this.sScore == "4"){
+					for (var i = 0; i < sScore; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-on.png'>";
+					}
+					for (var j = 0; j < 5-sScore; j++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}					
+				}else if(this.sScore == "5"){
+					for (var i = 0; i < sScore; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-on.png'>";
+					}
+					for (var j = 0; j < 5-sScore; j++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}
+				}
+				
+				shtml += "<a href='#' target='_blank' title='TITLE:店名'>"+
+			       		   "<figure>"+
+					       "<img src='${pageContext.request.contextPath}/"+this.sImage+"'>"+
+					       "<figcaption>"+
+					       "<span class='title'>"+this.sShopname+"</span>"+
+					       "<span class='price'>优惠活动：<i>"+this.sActivity+"</i></span>"+
+					       "</figcaption>"+
+					       "<p class='p1'>"+
+					       "<q>"+this.sIntroduce+"</q>"+
+					       "</p>"+
+					       "<p class='p2'>店铺评分："+
+					       scorehtml+
+					       "</p>"+
+					       "<p class='p3'>店铺地址："+this.sAddress+"</p>"+
+					       "</figure>"+
+					      "</a>";	
+				scorehtml = "";
+			})
+			$(".DCcontent").html(shtml);
+		},"json");
+		//加载评论
+		$.post("${pageContext.request.contextPath}/index/selecteEvaluates",function(data){
+			var html = "";
+			$.each(data,function(i,v){
+				$.each(v,function(a,b){
+					//alert(b.e_comment);
+					html += "<li>"+
+				     		"<img src='${pageContext.request.contextPath}/"+b.sm_image+"'>"+
+				     		"用户<b style='color:red'>"+b.u_telephone+"</b>对<b style='color:red'>"+b.s_shopName+"</b>“<b style='color:dark'>"+b.sm_dishName+"</b>”评说："+b.e_comment+""+
+				    		"</li>";
+				});
+			})
+			$("#userEvaluate").html(html);
+		},"json");
+		
+	});//jq底部
+	function chineseFood(){
+		$("#Shop").click();
+		$.post("${pageContext.request.contextPath}/index/selectClassifiedCommodities/chineseFood",function(data){
+			var shtml = "";
+			var scorehtml = "";
+			$.each(data.list,function(i,v){
+				var sScore = this.sScore;
+				if(this.sScore == "0"){
+					for (var i = 0; i < 5; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}
+				}else if(this.sScore == "1"){
+					for (var i = 0; i < sScore; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-on.png'>";
+					}
+					for (var j = 0; j < 5-sScore; j++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}
+				}else if(this.sScore == "2"){
+					for (var i = 0; i < sScore; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-on.png'>";
+					}
+					for (var j = 0; j < 5-sScore; j++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}
+				}else if(this.sScore == "3"){
+					for (var i = 0; i < sScore; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-on.png'>";
+					}
+					for (var j = 0; j < 5-sScore; j++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}					
+				}else if(this.sScore == "4"){
+					for (var i = 0; i < sScore; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-on.png'>";
+					}
+					for (var j = 0; j < 5-sScore; j++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}					
+				}else if(this.sScore == "5"){
+					for (var i = 0; i < sScore; i++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-on.png'>";
+					}
+					for (var j = 0; j < 5-sScore; j++) {
+						scorehtml += "<img src='${pageContext.request.contextPath}/images/star-off.png'>";
+					}
+				}
+				
+				shtml += "<a href='#' target='_blank' title='TITLE:店名'>"+
+			       		   "<figure>"+
+					       "<img src='${pageContext.request.contextPath}/"+this.sImage+"'>"+
+					       "<figcaption>"+
+					       "<span class='title'>"+this.sShopname+"</span>"+
+					       "<span class='price'>优惠活动：<i>"+this.sActivity+"</i></span>"+
+					       "</figcaption>"+
+					       "<p class='p1'>"+
+					       "<q>"+this.sIntroduce+"</q>"+
+					       "</p>"+
+					       "<p class='p2'>店铺评分："+
+					       scorehtml+
+					       "</p>"+
+					       "<p class='p3'>店铺地址："+this.sAddress+"</p>"+
+					       "</figure>"+
+					      "</a>";	
+				scorehtml = "";
+			})
+			$(".DCcontent").html(shtml);
+		},"json")
+	}
 </script>
 </head>
-
 <body>
-
+<style>
+* { margin: 0; padding: 0;}
+.myscroll { width: 300px; height: 310px; margin: 0 auto; border: 1px solid #ccc; line-height: 26px; font-size: 12px; overflow: hidden;}
+.myscroll li { height: 26px; margin-left: 25px;}
+</style>
 <header>
  <section class="Topmenubg">
   <div class="Topnav">
@@ -45,7 +273,7 @@
  </section>
  <div class="Logo_search">
   <div class="Logo"">
-   <img src="${pageContext.request.contextPath}/images/logo.jpg" title="DeathGhost" alt="模板">
+   <a href="${pageContext.request.contextPath}/page/index"><img src="${pageContext.request.contextPath}/images/logo.jpg" title="DeathGhost" alt="模板"></a>
    <i></i>
 	<div data-toggle="distpicker" style="display: inline">
 	    <select id="eprovinceName" data-province="湖北省" name="provinceName" style="width: 80px;"></select>
@@ -64,12 +292,12 @@
    <input type="submit" class="searchbutton" value="搜 索" />
    </div>
    </form>
-   <p class="hotkeywords"><a href="#" title="酸辣土豆丝">酸辣土豆丝</a><a href="#" title="这里是产品名称">螃蟹炒年糕</a><a href="#" title="这里是产品名称">牛奶炖蛋</a><a href="#" title="这里是产品名称">芝麻酱凉面</a><a href="#" title="这里是产品名称">滑蛋虾仁</a><a href="#" title="这里是产品名称">蒜汁茄子</a></p>
+   <p class="hotkeywords"><a href="#" title="鱼头火锅">鱼头火锅</a><a href="#" title="这里是产品名称">酱香牛肉</a><a href="#" title="这里是产品名称">鳝鱼拼盘</a><a href="#" title="这里是产品名称">干锅手撕鸡</a></p>
   </div>
  </div>
  <nav class="menu_bg">
   <ul class="menu">
-   <li><a href="index.html">首页</a></li>
+   <li><a href="${pageContext.request.contextPath}/page/index">首页</a></li>
    <li><a href="list.html">订餐</a></li>
    <li><a href="category.html">积分商城</a></li>
    <li><a href="article_read.html">关于我们</a></li>
@@ -94,45 +322,16 @@
     </ul>
  </div>
  <aside class="N-right">
-  <div class="N-title">公司新闻 <i>COMPANY NEWS</i></div>
+  <div class="N-title">最新消息 <i>NEWS</i></div>
   <ul class="Newslist">
-   <li><i></i><a href="article_read.html" target="_blank" title="这里调用新闻标题...">欢迎访问DeathGhost博客站...</a></li>
-   <li><i></i><a href="article_read.html" target="_blank" title="这里调用新闻标题...">H5WEB前端开发 移动WEB模板设计...</a></li>
+   <li><i></i><a href="article_read.html" target="_blank" title="这里调用新闻标题...">欢迎访问网上餐厅</a></li>
+<!--    <li><i></i><a href="article_read.html" target="_blank" title="这里调用新闻标题...">各大优惠应你所想。。。</a></li> -->
   </ul>
+  <div class="myscroll">
   <ul class="Orderlist" id="UpRoll">
-   <li>
-   <p>订单编号：2014090912973</p>
-   <p>收件人：王先生</p>
-   <p>订单状态：<i class="State01">已发货</i></p>
-   </li>
-   <li>
-   <p>订单编号：2014090912978</p>
-   <p>收件人：张小姐</p>
-   <p>订单状态：<i class="State02">已签收</i><i class="State03">已点评</i></p>
-   </li>
-   <li>
-   <p>订单编号：2014090912988</p>
-   <p>收件人：龚先生</p>
-   <p>订单状态：<i class="State02">已签收</i><i class="State03">已点评</i></p>
-   </li>
+  
   </ul>
-  <script>
-   var UpRoll = document.getElementById('UpRoll');
-   var lis = UpRoll.getElementsByTagName('li');
-   var ml = 0;
-   var timer1 = setInterval(function(){
-    var liHeight = lis[0].offsetHeight;
-    var timer2 = setInterval(function(){
-     UpRoll.scrollTop = (++ml);
-     if(ml ==1){
-        clearInterval(timer2);
-        UpRoll.scrollTop = 0;
-        ml = 0;
-        lis[0].parentNode.appendChild(lis[0]);
-    }
-    },10); 
-    },5000);
-  </script>
+  </div>
  </aside>
 </section>
 <section class="Sfainfor">
@@ -140,166 +339,47 @@
   <div id="Indexouter">
    <ul id="Indextab">
     <li class="current">点菜</li>
-    <li>餐馆</li>
+    <li id="Shop">餐馆</li>
     <p class="class_B">
-    <a href="#">中餐</a>
-    <a href="#">西餐</a>
-    <a href="#">甜点</a>
-    <a href="#">日韩料理</a>
-    <span><a href="#" target="_blank">more ></a></span>
+    <a href="javascript:void(0)" onclick="chineseFood()">中餐</a>
+    <a href="${pageContext.request.contextPath}/index/selectClassifiedCommodities/europeanFood">西餐</a>
+    <a href="${pageContext.request.contextPath}/index/selectClassifiedCommodities/dessert">甜点</a>
+    <a href="${pageContext.request.contextPath}/index/selectClassifiedCommodities/barbecue">烧烤</a>
+    <a href="${pageContext.request.contextPath}/index/selectClassifiedCommodities/fruits">果蔬生鲜</a>
+    <a href="${pageContext.request.contextPath}/index/selectClassifiedCommodities/japaneseCuisine">日韩料理</a>
     </p>
    </ul>
   <div id="Indexcontent">
    <ul style="display:block;">
     <li>
-     <p class="seekarea">
-     <a href="#">碑林区</a>
-     <a href="#">新城区</a>
-     <a href="#">未央区</a>
-     <a href="#">雁塔区</a>
-     <a href="#">莲湖区</a>
-     <a href="#">高新区</a>
-     <a href="#">灞桥区</a>
-     <a href="#">高陵区</a>
-     <a href="#">阎良区</a>
-     <a href="#">临潼区</a>
-     <a href="#">长安区</a>
-     <a href="#">周至县</a>
-     <a href="#">蓝田县 </a>
+     <p class="seekarea" id="regions">
      </p>
+     </li>
      <div class="SCcontent">
-     <a href="detailsp.html" target="_blank" title="菜品名称">
-      <figure>
-       <img src="${pageContext.request.contextPath}/upload/05.jpg">
-       <figcaption>
-       <span class="title">老李家的糖醋鲤鱼</span>
-       <span class="price"><i>￥</i>169.00</span>
-       </figcaption>
-      </figure>
-      </a>
-     <a href="detailsp.html" target="_blank" title="菜品名称">
-      <figure>
-       <img src="${pageContext.request.contextPath}/upload/04.jpg">
-       <figcaption>
-       <span class="title">老李家的糖醋鲤鱼</span>
-       <span class="price"><i>￥</i>169.00</span>
-       </figcaption>
-      </figure>
-      </a>
-     <a href="detailsp.html" target="_blank" title="菜品名称">
-      <figure>
-       <img src="${pageContext.request.contextPath}/upload/06.jpg">
-       <figcaption>
-       <span class="title">老李家的糖醋鲤鱼</span>
-       <span class="price"><i>￥</i>169.00</span>
-       </figcaption>
-      </figure>
-      </a>
+<!--      <a href="detailsp.html" target="_blank" title="菜品名称"> -->
+<!--       <figure> -->
+<%--        <img src="${pageContext.request.contextPath}/upload/05.jpg"> --%>
+<!--        <figcaption> -->
+<!--        <span class="title">老李家的糖醋鲤鱼</span> -->
+<!--        <span class="price"><i>￥</i>169.00</span> -->
+<!--        </figcaption> -->
+<!--       </figure> -->
      </div>
      <div class="bestshop">
-      <a href="shop.html" target="_blank" title="店铺名称">
-      <figure>
-       <img src="${pageContext.request.contextPath}/upload/wpjnewlogo.jpg">
-      </figure>
-      </a>
-      <a href="shop.html" target="_blank" title="店铺名称">
-      <figure>
-       <img src="${pageContext.request.contextPath}/upload/weijia.jpg">
-      </figure>
-      </a>
-      <a href="shop.html" target="_blank" title="店铺名称">
-      <figure>
-       <img src="${pageContext.request.contextPath}/upload/wpjnewlogo.jpg">
-      </figure>
-      </a>
-      <a href="shop.html" target="_blank" title="店铺名称">
-      <figure>
-       <img src="${pageContext.request.contextPath}/upload/weijia.jpg">
-      </figure>
-      </a>
-      <a href="shop.html" target="_blank" title="店铺名称">
-      <figure>
-       <img src="${pageContext.request.contextPath}/upload/wpjnewlogo.jpg">
-      </figure>
-      </a>
+<!--       <a href="shop.html" target="_blank" title="店铺名称"> -->
+<!--       <figure> -->
+<%--        <img src="${pageContext.request.contextPath}/upload/wpjnewlogo.jpg"> --%>
+<!--       </figure> -->
      </div>
     </li>
    </ul>
    <ul>
   <li>
-     <p class="seekarea">
-     <a href="#">碑林区</a>
-     <a href="#">新城区</a>
-     <a href="#">未央区</a>
-     <a href="#">雁塔区</a>
-     <a href="#">莲湖区</a>
-     <a href="#">高新区</a>
-     <a href="#">灞桥区</a>
-     <a href="#">高陵区</a>
-     <a href="#">阎良区</a>
-     <a href="#">临潼区</a>
-     <a href="#">长安区</a>
-     <a href="#">周至县</a>
-     <a href="#">蓝田县 </a>
+     <p id="seekareas" class="seekarea">
+<!-- 		地区查询 -->
      </p>
      <div class="DCcontent">
-       <a href="shop.html" target="_blank" title="TITLE:店名">
-       <figure>
-       <img src="upload/cc.jpg">
-       <figcaption>
-       <span class="title">老重庆川菜馆</span>
-       <span class="price">预定折扣：<i>8.9折</i></span>
-       </figcaption>
-       <p class="p1"><q>仅售169元！价值289元的4-5人餐，提供免费WiFi。</q></p>
-       <p class="p2">
-       店铺评分：
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-off.png">
-       </p>
-       <p class="p3">店铺地址：西安市雁塔区丈八路***老重庆川菜馆...</p>
-       </figure>
-      </a>
-       <a href="shop.html" target="_blank" title="TITLE:店名">
-       <figure>
-       <img src="${pageContext.request.contextPath}/upload/cc.jpg">
-       <figcaption>
-       <span class="title">老重庆川菜馆</span>
-       <span class="price">预定折扣：<i>8.9折</i></span>
-       </figcaption>
-       <p class="p1"><q>仅售169元！价值289元的4-5人餐，提供免费WiFi。</q></p>
-       <p class="p2">
-       店铺评分：
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-off.png">
-       </p>
-       <p class="p3">店铺地址：西安市雁塔区丈八路***老重庆川菜馆...</p>
-       </figure>
-      </a>
-       <a href="shop.html" target="_blank" title="TITLE:店名">
-       <figure>
-       <img src="${pageContext.request.contextPath}/upload/cc.jpg">
-       <figcaption>
-       <span class="title">老重庆川菜馆</span>
-       <span class="price">预定折扣：<i>8.9折</i></span>
-       </figcaption>
-       <p class="p1"><q>仅售169元！价值289元的4-5人餐，提供免费WiFi。</q></p>
-       <p class="p2">
-       店铺评分：
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-on.png">
-       <img src="${pageContext.request.contextPath}/images/star-off.png">
-       </p>
-       <p class="p3">店铺地址：西安市雁塔区丈八路***老重庆川菜馆...</p>
-       </figure>
-      </a>
+<!--      商铺列表 -->
      </div>
   </li>
   </ul>
@@ -307,18 +387,11 @@
  </div>
  </article>
  <aside class="A-infor">
-  <img src="${pageContext.request.contextPath}/upload/2014911.jpg">
+  <img src="${pageContext.request.contextPath}/upload/haibao.jpg">
   <div class="usercomment">
    <span>用户菜品点评</span>
-   <ul>
-    <li>
-     <img src="${pageContext.request.contextPath}/upload/01.jpg">
-     用户“DeathGhost”对[ 老李川菜馆 ]“酸辣土豆丝”评说：味道挺不错，送餐速度挺快...
-    </li>
-    <li>
-     <img src="${pageContext.request.contextPath}/upload/02.jpg">
-     用户“DeathGhost”对[ 魏家凉皮 ]“酸辣土豆丝”评说：味道挺不错，送餐速度挺快...
-    </li>
+   <ul id="userEvaluate">
+<!-- 用户评论区 -->
    </ul>
   </div>
  </aside>

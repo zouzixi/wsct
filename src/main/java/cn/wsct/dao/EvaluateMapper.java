@@ -3,6 +3,8 @@ package cn.wsct.dao;
 import cn.wsct.pojo.Evaluate;
 import cn.wsct.pojo.EvaluateExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface EvaluateMapper {
@@ -27,4 +29,7 @@ public interface EvaluateMapper {
     int updateByPrimaryKeySelective(Evaluate record);
 
     int updateByPrimaryKey(Evaluate record);
+    
+    //查询评论
+    List<Map<String, Object>> selectEvaluate();
 }

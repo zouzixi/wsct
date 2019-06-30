@@ -6,7 +6,7 @@
 <title>登陆</title>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+<link rel="stylesheet" href="${pageContext.request.contextPath}/login/css/jigsaw.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/login/bootstrap.min.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/login/css/camera.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/login/bootstrap-responsive.min.css" />
@@ -57,10 +57,138 @@
 			fhi++;
 		};
 		
+		function regist(){
+			$("#windows1").hide();
+			$("#windows2").show();
+		}
+		
+		//注册
+		function rcheck(){
+			if($("#USERNAME").val()==""){
+				$("#USERNAME").tips({
+					side:3,
+		            msg:'输入用户名',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#USERNAME").focus();
+				$("#USERNAME").val('');
+				return false;
+			}else{
+				$("#USERNAME").val(jQuery.trim($('#USERNAME').val()));
+			}
+			if($("#PASSWORD").val()==""){
+				$("#PASSWORD").tips({
+					side:3,
+		            msg:'输入密码',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#PASSWORD").focus();
+				return false;
+			}
+			if($("#PASSWORD").val()!=$("#chkpwd").val()){
+				$("#chkpwd").tips({
+					side:3,
+		            msg:'两次密码不相同',
+		            bg:'#AE81FF',
+		            time:3
+		        });
+				$("#chkpwd").focus();
+				return false;
+			}
+			if($("#name").val()==""){
+				$("#name").tips({
+					side:3,
+		            msg:'输入姓名',
+		            bg:'#AE81FF',
+		            time:3
+		        });
+				$("#name").focus();
+				return false;
+			}
+			if ($("#rcode").val() == "") {
+				$("#rcode").tips({
+					side : 1,
+					msg : '验证码不得为空',
+					bg : '#AE81FF',
+					time : 3
+				});
+				$("#rcode").focus();
+				return false;
+			}
+			return true;
+		}
+		//提交注册
+		function register(){
+			if(rcheck()){
+				$.post("${pageContext.request.contextPath}/user/regist",$("#registForm").serialize(),function(data){
+					if(data.result == "1"){
+						alert("恭喜注册成功！快去登陆吧！");
+						window.location.href='login';
+					}else{
+						alert("验证码不正确!");
+					}
+				
+				},"json");
+			}
+			
+		}
+		
+		var isPhone = 1;
+		//验证手机号码
+		function checkPhone(){
+			var phone = $('#USERNAME').val();
+			var pattern = /^1[0-9]{10}$/;
+			isPhone = 1;
+			if(!pattern.test(phone)){
+				alert('请输入正确的手机号码');
+				isPhone = 0;
+				return;
+			}
+		}
+		
+		/*获取验证码*/
+		function sendMessage(){
+			checkPhone(); //验证手机号码
+			if(isPhone){
+				$.post("${pageContext.request.contextPath}/user/sendMessage",$("#registForm").serialize(),function(data){
+					if(data == "1"){
+						alert("用户已经存在！返回直接登陆哦！");
+						window.location.href='login';
+					}else{
+						resetCode(); //倒计时
+					}
+				},"json");
+				
+			}else{
+				$('#USERNAME').focus();
+			}
+			
+		}
+		//倒计时
+		function resetCode(){
+			$('#J_getCode').hide();
+			$('#J_second').html('60');
+			$('#J_resetCode').show();
+			var second = 60;
+			var timer = null;
+			timer = setInterval(function(){
+				second -= 1;
+				if(second >0 ){
+					$('#J_second').html(second);
+				}else{
+					clearInterval(timer);
+					$('#J_getCode').show();
+					$('#J_resetCode').hide();
+				}
+			},1000);
+		}
 	</script>
+
 </head>
 <body>
-
+	
 	<!--小键盘承载器-->
 	<canvas class="cavs"></canvas>
 	<div style="width:100%;height:300px;text-align: center;margin: 0 auto;position: absolute;">
@@ -92,6 +220,14 @@
 						</div>
 					</div>
 				</div>
+<!-- 				验证 -->
+				<p class="container">
+				
+				
+				  <div id="captcha" style="position: relative;display: inline-block;"></div><br />
+				  <span id="msg"></span>
+				</p>	
+							
 				<div style="float:right;padding-right:10%;">
 					<div style="float: left;margin-top:3px;margin-right:2px;">
 						<font color="white">记住密码</font>
@@ -104,20 +240,11 @@
 				<div class="form-actions">
 					<div style="width:86%;padding-left:8%;">
 
-						<div style="float: left;padding-top:2px;">
-							<i><img src="${pageContext.request.contextPath}/login/yan.png" /></i>
-						</div>
-						<div style="float: left;" class="codediv">
-							<input type="text" name="code" id="code" class="login_code"
-								style="height:16px; padding-top:4px;" />
-						</div>
-						<div style="float: left;">
-							<a href="#" style="height:30px;" id="codeImg" >发送验证码</a>
-						</div>
+					
 						<c:if test="${pd.isZhuce == 'yes' }">
-						<span class="pull-right" style="padding-right:3%;"><a href="javascript:changepage(1);" class="btn btn-success">注册</a></span>
+						<span class="pull-right" style="padding-right:3%;"><a href="javascript:changepage(1);" class="btn btn-success" onclick="regist()">注册</a></span>
 						</c:if>
-						<span class="pull-right"><a onclick="severCheck();" class="flip-link btn btn-info" id="to-recover">登录</a></span>
+<!-- 						<span class="pull-right"><a onclick="severCheck();" class="flip-link btn btn-info" id="to-recover">登录</a></span> -->
 					</div>
 				</div>
 			</form>
@@ -131,7 +258,7 @@
 		<!-- 注册 -->
 		<div id="windows2" style="display: none;">
 		<div id="loginbox">
-			<form action="" method="post" name="loginForm" id="loginForm">
+			<form action="" method="post" name="registForm" id="registForm">
 				<div class="control-group normal_text">
 					<h3>
 						<!--<img src="static/login/logo.png" alt="Logo" />-->
@@ -143,7 +270,7 @@
 						<div class="main_input_box">
 							<span class="add-on bg_lg">
 							<i>用户</i>
-							</span><input type="text" name="USERNAME" id="USERNAME" value="" placeholder="请输入手机号" />
+							</span><input type="text" name="telephone" id="USERNAME" value="" placeholder="请输入手机号" />
 						</div>
 					</div>
 				</div>
@@ -152,7 +279,7 @@
 						<div class="main_input_box">
 							<span class="add-on bg_ly">
 							<i>密码</i>
-							</span><input type="password" name="PASSWORD" id="PASSWORD" placeholder="请输入密码" class="keypad" keypadMode="full" allowKeyboard="true" value=""/>
+							</span><input type="password" name="password" id="PASSWORD" placeholder="请输入密码" class="keypad" keypadMode="full" allowKeyboard="true" value=""/>
 						</div>
 					</div>
 				</div>
@@ -165,26 +292,6 @@
 						</div>
 					</div>
 				</div>
-				<!--<div class="control-group">
-					<div class="controls">
-						<div class="main_input_box">
-							<span class="add-on bg_lg">
-							<i>姓名</i>
-							</span><input type="text" name="NAME" id="name" value="" placeholder="请输入姓名" />
-						</div>
-					</div>
-				</div>
-				-->
-				<!--<div class="control-group">
-					<div class="controls">
-						<div class="main_input_box">
-							<span class="add-on bg_lg">
-							<i>邮箱</i>
-							</span><input type="text" name="EMAIL" id="EMAIL" value="" placeholder="请输入邮箱" />
-						</div>
-					</div>
-				</div>
-				-->
 				<div class="form-actions">
 					<div style="width:86%;padding-left:8%;">
 
@@ -197,10 +304,12 @@
 						</div>
 						
 						<div style="float: left;">
-							<a href="#" style="height:30px;" id="codeImg" >发送验证码</a>
+							<a class="btn btn-small get-code" onclick="sendMessage()" id="J_getCode">获取验证码</a>
+							<a class="btn btn-small reset-code" id="J_resetCode" style="display:none;"><span id="J_second">60</span>秒后重发</a>
+<!-- 							<a href="#" style="height:30px;" id="codeImg" onclick="sendMessage(this)" >发送验证码</a> -->
 						</div>
-						<span class="pull-right" style="padding-right:3%;"><a href="javascript:changepage(2);" class="btn btn-success">取消</a></span>
-						<span class="pull-right"><a onclick="register();" class="flip-link btn btn-info" id="to-recover">提交</a></span>
+						<span class="pull-right" style="padding-right:3%;"><a href="${pageContext.request.contextPath}/page/login" class="btn btn-success">取消</a></span>
+						<span class="pull-right"><a onclick="register()" class="flip-link btn btn-info" id="to-recover">提交</a></span>
 					</div>
 				</div>
 			</form>
@@ -224,84 +333,24 @@
 		</div>
 		<!-- #camera_wrap_3 -->
 	</div>
-
-	<script type="text/javascript">
-		//服务器校验
-		function severCheck(){
-			if(check()){
-				var loginname = $("#loginname").val();
-				var password = $("#password").val();
-				var code = loginname+","+password+","+$("#code").val();
-				$.ajax({
-					type: "POST",
-					url: 'login_login',
-			    	data: {KEYDATA:code,tm:new Date().getTime()},
-					dataType:'json',
-					cache: false,
-					success: function(data){
-						if("success" == data.result){
-							saveCookie();
-<%-- 							window.location.href="<%=basePath%>main/index"; --%>
-						}else if("usererror" == data.result){
-							$("#loginname").tips({
-								side : 1,
-								msg : "用户名或密码有误",
-								bg : '#FF5080',
-								time : 15
-							});
-							showfh();
-							$("#loginname").focus();
-						}else if("codeerror" == data.result){
-							$("#code").tips({
-								side : 1,
-								msg : "验证码输入有误",
-								bg : '#FF5080',
-								time : 15
-							});
-							showfh();
-							$("#code").focus();
-						}else{
-							$("#loginname").tips({
-								side : 1,
-								msg : "缺少参数",
-								bg : '#FF5080',
-								time : 15
-							});
-							showfh();
-							$("#loginname").focus();
-						}
-					}
-				});
-			}
-		}
+	<script src="${pageContext.request.contextPath}/login/js/bootstrap.min.js"></script>
+	<script src="${pageContext.request.contextPath}/js/jquery-1.7.2.js"></script>
+	<script src="${pageContext.request.contextPath}/login/js/jquery.easing.1.3.js"></script>
+	<script src="${pageContext.request.contextPath}/login/js/jquery.mobile.customized.min.js"></script>
+	<script src="${pageContext.request.contextPath}/login/js/camera.min.js"></script>
+	<script src="${pageContext.request.contextPath}/login/js/templatemo_script.js"></script>
+	<script src="${pageContext.request.contextPath}/login/js/ban.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jQuery.md5.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.tips.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.cookie.js"></script>
 	
-		$(document).ready(function() {
-			changeCode1();
-			$("#codeImg").bind("click", changeCode1);
-			$("#zcodeImg").bind("click", changeCode2);
-		});
-
-		$(document).keyup(function(event) {
-			if (event.keyCode == 13) {
-				$("#to-recover").trigger("click");
-			}
-		});
-
-		function genTimestamp() {
-			var time = new Date();
-			return time.getTime();
-		}
-
-		function changeCode1() {
-			$("#codeImg").attr("src", "code.do?t=" + genTimestamp());
-		}
-		function changeCode2() {
-			$("#zcodeImg").attr("src", "code.do?t=" + genTimestamp());
-		}
-
-		//客户端校验
-		function check() {
-
+	<!-- 软键盘控件start -->
+	<script type="text/javascript" src="${pageContext.request.contextPath}/login/keypad/js/form/keypad.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/login/keypad/js/framework.js"></script>
+	<!-- 软键盘控件end -->
+	<script src="${pageContext.request.contextPath}/login/js/jigsaw.js"></script>
+	<script>
+	  jigsaw.init(document.getElementById('captcha'), function () {
 			if ($("#loginname").val() == "") {
 				$("#loginname").tips({
 					side : 2,
@@ -326,218 +375,19 @@
 				$("#password").focus();
 				return false;
 			}
-			if ($("#code").val() == "") {
-				$("#code").tips({
-					side : 1,
-					msg : '验证码不得为空',
-					bg : '#AE81FF',
-					time : 3
-				});
-				showfh();
-				$("#code").focus();
-				return false;
-			}
-			$("#loginbox").tips({
-				side : 1,
-				msg : '正在登录 , 请稍后 ...',
-				bg : '#68B500',
-				time : 10
-			});
-
-			return true;
-		}
-
-		function savePaw() {
-			if (!$("#saveid").attr("checked")) {
-				$.cookie('loginname', '', {
-					expires : -1
-				});
-				$.cookie('password', '', {
-					expires : -1
-				});
-				$("#loginname").val('');
-				$("#password").val('');
-			}
-		}
-
-		function saveCookie() {
-			if ($("#saveid").attr("checked")) {
-				$.cookie('loginname', $("#loginname").val(), {
-					expires : 7
-				});
-				$.cookie('password', $("#password").val(), {
-					expires : 7
-				});
-			}
-		}
-		
-		jQuery(function() {
-			var loginname = $.cookie('loginname');
-			var password = $.cookie('password');
-			if (typeof(loginname) != "undefined"
-					&& typeof(password) != "undefined") {
-				$("#loginname").val(loginname);
-				$("#password").val(password);
-				$("#saveid").attr("checked", true);
-				$("#code").focus();
-			}
-		});
-		
-		//登录注册页面切换
-		function changepage(value) {
-			if(value == 1){
-				$("#windows1").hide();
-				$("#windows2").show();
-				changeCode2();
-			}else{
-				$("#windows2").hide();
-				$("#windows1").show();
-				changeCode1();
-			}
-		}
-		
-	//注册
-	function rcheck(){
-		if($("#USERNAME").val()==""){
-			$("#USERNAME").tips({
-				side:3,
-	            msg:'输入用户名',
-	            bg:'#AE81FF',
-	            time:2
-	        });
-			$("#USERNAME").focus();
-			$("#USERNAME").val('');
-			return false;
-		}else{
-			$("#USERNAME").val(jQuery.trim($('#USERNAME').val()));
-		}
-		if($("#PASSWORD").val()==""){
-			$("#PASSWORD").tips({
-				side:3,
-	            msg:'输入密码',
-	            bg:'#AE81FF',
-	            time:2
-	        });
-			$("#PASSWORD").focus();
-			return false;
-		}
-		if($("#PASSWORD").val()!=$("#chkpwd").val()){
-			$("#chkpwd").tips({
-				side:3,
-	            msg:'两次密码不相同',
-	            bg:'#AE81FF',
-	            time:3
-	        });
-			$("#chkpwd").focus();
-			return false;
-		}
-		if($("#name").val()==""){
-			$("#name").tips({
-				side:3,
-	            msg:'输入姓名',
-	            bg:'#AE81FF',
-	            time:3
-	        });
-			$("#name").focus();
-			return false;
-		}
-		if($("#EMAIL").val()==""){
-			$("#EMAIL").tips({
-				side:3,
-	            msg:'输入邮箱',
-	            bg:'#AE81FF',
-	            time:3
-	        });
-			$("#EMAIL").focus();
-			return false;
-		}else if(!ismail($("#EMAIL").val())){
-			$("#EMAIL").tips({
-				side:3,
-	            msg:'邮箱格式不正确',
-	            bg:'#AE81FF',
-	            time:3
-	        });
-			$("#EMAIL").focus();
-			return false;
-		}
-		if ($("#rcode").val() == "") {
-			$("#rcode").tips({
-				side : 1,
-				msg : '验证码不得为空',
-				bg : '#AE81FF',
-				time : 3
-			});
-			$("#rcode").focus();
-			return false;
-		}
-		return true;
-	}
-	
-	//提交注册
-	function register(){
-		if(rcheck()){
-			var nowtime = date2str(new Date(),"yyyyMMdd");
-			$.ajax({
-				type: "POST",
-				url: 'appSysUser/registerSysUser.do',
-		    	data: {USERNAME:$("#USERNAME").val(),PASSWORD:$("#PASSWORD").val(),NAME:$("#name").val(),EMAIL:$("#EMAIL").val(),rcode:$("#rcode").val(),FKEY:$.md5('USERNAME'+nowtime+',fh,'),tm:new Date().getTime()},
-				dataType:'json',
-				cache: false,
-				success: function(data){
-					if("00" == data.result){
-						$("#windows2").hide();
-						$("#windows1").show();
-						$("#loginbox").tips({
-							side : 1,
-							msg : '注册成功,请登录',
-							bg : '#68B500',
-							time : 3
-						});
-						changeCode1();
-					}else if("04" == data.result){
-						$("#USERNAME").tips({
-							side : 1,
-							msg : "用户名已存在",
-							bg : '#FF5080',
-							time : 15
-						});
-						showfh();
-						$("#USERNAME").focus();
-					}else if("06" == data.result){
-						$("#rcode").tips({
-							side : 1,
-							msg : "验证码输入有误",
-							bg : '#FF5080',
-							time : 15
-						});
-						showfh();
-						$("#rcode").focus();
-					}
-				}
-			});
-		}
-	}
-	
-	//邮箱格式校验
-	function ismail(mail){
-		return(new RegExp(/^(?:[a-zA-Z0-9]+[_\-\+\.]?)*[a-zA-Z0-9]+@(?:([a-zA-Z0-9]+[_\-]?)*[a-zA-Z0-9]+\.)+([a-zA-Z]{2,})+$/).test(mail));
-	}
-	//js  日期格式
+// 	    document.getElementById('msg').innerHTML = '登录成功！'
+	    $.post("${pageContext.request.contextPath}/user/login",$("#loginForm").serialize(),function(data){
+	    	if(data.login == "1"){
+	    		//验证通过
+	    		$("#msg").css("color","green").html("登陆成功！");
+	    		window.location.href='index';
+	    	}else{
+	    		//账号密码错误
+	    		$("#msg").css("color","red").html("账号或密码错误,请重新填写！");
+	    		var t=setTimeout("location.reload()",2000);
+	    	}
+	    },"json");
+	  })
 	</script>
-	<script src="${pageContext.request.contextPath}/login/js/bootstrap.min.js"></script>
-	<script src="${pageContext.request.contextPath}/js/jquery-1.7.2.js"></script>
-	<script src="${pageContext.request.contextPath}/login/js/jquery.easing.1.3.js"></script>
-	<script src="${pageContext.request.contextPath}/login/js/jquery.mobile.customized.min.js"></script>
-	<script src="${pageContext.request.contextPath}/login/js/camera.min.js"></script>
-	<script src="${pageContext.request.contextPath}/login/js/templatemo_script.js"></script>
-	<script src="${pageContext.request.contextPath}/login/js/ban.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jQuery.md5.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.tips.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.cookie.js"></script>
-	
-	<!-- 软键盘控件start -->
-	<script type="text/javascript" src="${pageContext.request.contextPath}/login/keypad/js/form/keypad.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/login/keypad/js/framework.js"></script>
-	<!-- 软键盘控件end -->
 </body>
 </html>

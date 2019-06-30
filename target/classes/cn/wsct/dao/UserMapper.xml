@@ -11,6 +11,11 @@
     <result column="u_lastTime" property="uLasttime" jdbcType="TIMESTAMP" />
     <result column="u_coin" property="uCoin" jdbcType="INTEGER" />
   </resultMap>
+  
+  <insert id="insertUser">
+  	INSERT INTO `USER`(u_telephone,u_password) VALUES (#{telephone},#{password})
+  </insert>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

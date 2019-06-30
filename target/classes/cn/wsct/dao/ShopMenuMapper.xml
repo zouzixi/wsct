@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wsct.dao.ShopMenuMapper" >
+  <resultMap id="BaseResultMap" type="cn.wsct.pojo.ShopMenu" >
+    <id column="sm_id" property="smId" jdbcType="INTEGER" />
+    <result column="s_id" property="sId" jdbcType="INTEGER" />
+    <result column="sm_dishName" property="smDishname" jdbcType="VARCHAR" />
+    <result column="sm_price" property="smPrice" jdbcType="DOUBLE" />
+    <result column="sm_stock" property="smStock" jdbcType="INTEGER" />
+    <result column="sm_salesVolume" property="smSalesvolume" jdbcType="INTEGER" />
+    <result column="sm_details" property="smDetails" jdbcType="VARCHAR" />
+    <result column="sm_image" property="smImage" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    sm_id, s_id, sm_dishName, sm_price, sm_stock, sm_salesVolume, sm_details, sm_image
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.wsct.pojo.ShopMenuExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from shop_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from shop_menu
+    where sm_id = #{smId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from shop_menu
+    where sm_id = #{smId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.wsct.pojo.ShopMenuExample" >
+    delete from shop_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.wsct.pojo.ShopMenu" >
+    insert into shop_menu (sm_id, s_id, sm_dishName, 
+      sm_price, sm_stock, sm_salesVolume, 
+      sm_details, sm_image)
+    values (#{smId,jdbcType=INTEGER}, #{sId,jdbcType=INTEGER}, #{smDishname,jdbcType=VARCHAR}, 
+      #{smPrice,jdbcType=DOUBLE}, #{smStock,jdbcType=INTEGER}, #{smSalesvolume,jdbcType=INTEGER}, 
+      #{smDetails,jdbcType=VARCHAR}, #{smImage,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.wsct.pojo.ShopMenu" >
+    insert into shop_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="smId != null" >
+        sm_id,
+      </if>
+      <if test="sId != null" >
+        s_id,
+      </if>
+      <if test="smDishname != null" >
+        sm_dishName,
+      </if>
+      <if test="smPrice != null" >
+        sm_price,
+      </if>
+      <if test="smStock != null" >
+        sm_stock,
+      </if>
+      <if test="smSalesvolume != null" >
+        sm_salesVolume,
+      </if>
+      <if test="smDetails != null" >
+        sm_details,
+      </if>
+      <if test="smImage != null" >
+        sm_image,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="smId != null" >
+        #{smId,jdbcType=INTEGER},
+      </if>
+      <if test="sId != null" >
+        #{sId,jdbcType=INTEGER},
+      </if>
+      <if test="smDishname != null" >
+        #{smDishname,jdbcType=VARCHAR},
+      </if>
+      <if test="smPrice != null" >
+        #{smPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="smStock != null" >
+        #{smStock,jdbcType=INTEGER},
+      </if>
+      <if test="smSalesvolume != null" >
+        #{smSalesvolume,jdbcType=INTEGER},
+      </if>
+      <if test="smDetails != null" >
+        #{smDetails,jdbcType=VARCHAR},
+      </if>
+      <if test="smImage != null" >
+        #{smImage,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.wsct.pojo.ShopMenuExample" resultType="java.lang.Integer" >
+    select count(*) from shop_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update shop_menu
+    <set >
+      <if test="record.smId != null" >
+        sm_id = #{record.smId,jdbcType=INTEGER},
+      </if>
+      <if test="record.sId != null" >
+        s_id = #{record.sId,jdbcType=INTEGER},
+      </if>
+      <if test="record.smDishname != null" >
+        sm_dishName = #{record.smDishname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.smPrice != null" >
+        sm_price = #{record.smPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.smStock != null" >
+        sm_stock = #{record.smStock,jdbcType=INTEGER},
+      </if>
+      <if test="record.smSalesvolume != null" >
+        sm_salesVolume = #{record.smSalesvolume,jdbcType=INTEGER},
+      </if>
+      <if test="record.smDetails != null" >
+        sm_details = #{record.smDetails,jdbcType=VARCHAR},
+      </if>
+      <if test="record.smImage != null" >
+        sm_image = #{record.smImage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update shop_menu
+    set sm_id = #{record.smId,jdbcType=INTEGER},
+      s_id = #{record.sId,jdbcType=INTEGER},
+      sm_dishName = #{record.smDishname,jdbcType=VARCHAR},
+      sm_price = #{record.smPrice,jdbcType=DOUBLE},
+      sm_stock = #{record.smStock,jdbcType=INTEGER},
+      sm_salesVolume = #{record.smSalesvolume,jdbcType=INTEGER},
+      sm_details = #{record.smDetails,jdbcType=VARCHAR},
+      sm_image = #{record.smImage,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.wsct.pojo.ShopMenu" >
+    update shop_menu
+    <set >
+      <if test="sId != null" >
+        s_id = #{sId,jdbcType=INTEGER},
+      </if>
+      <if test="smDishname != null" >
+        sm_dishName = #{smDishname,jdbcType=VARCHAR},
+      </if>
+      <if test="smPrice != null" >
+        sm_price = #{smPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="smStock != null" >
+        sm_stock = #{smStock,jdbcType=INTEGER},
+      </if>
+      <if test="smSalesvolume != null" >
+        sm_salesVolume = #{smSalesvolume,jdbcType=INTEGER},
+      </if>
+      <if test="smDetails != null" >
+        sm_details = #{smDetails,jdbcType=VARCHAR},
+      </if>
+      <if test="smImage != null" >
+        sm_image = #{smImage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sm_id = #{smId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.wsct.pojo.ShopMenu" >
+    update shop_menu
+    set s_id = #{sId,jdbcType=INTEGER},
+      sm_dishName = #{smDishname,jdbcType=VARCHAR},
+      sm_price = #{smPrice,jdbcType=DOUBLE},
+      sm_stock = #{smStock,jdbcType=INTEGER},
+      sm_salesVolume = #{smSalesvolume,jdbcType=INTEGER},
+      sm_details = #{smDetails,jdbcType=VARCHAR},
+      sm_image = #{smImage,jdbcType=VARCHAR}
+    where sm_id = #{smId,jdbcType=INTEGER}
+  </update>
+</mapper>

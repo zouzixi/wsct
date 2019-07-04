@@ -3,6 +3,8 @@ package cn.wsct.dao;
 import cn.wsct.pojo.ShopMenu;
 import cn.wsct.pojo.ShopMenuExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface ShopMenuMapper {
@@ -27,4 +29,7 @@ public interface ShopMenuMapper {
     int updateByPrimaryKeySelective(ShopMenu record);
 
     int updateByPrimaryKey(ShopMenu record);
+    
+    List<Map<String, Object>> selectShopMenu(@Param("sTelephone") String sTelephone);
+    
 }

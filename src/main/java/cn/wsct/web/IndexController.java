@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,7 @@ import cn.wsct.pojo.Order;
 import cn.wsct.pojo.Region;
 import cn.wsct.pojo.Shop;
 import cn.wsct.pojo.ShopMenu;
+import cn.wsct.pojo.User;
 import cn.wsct.service.IndexService;
 import cn.wsct.util.RandomValue;
 
@@ -92,24 +95,45 @@ public class IndexController {
 	@RequestMapping("/selectClassifiedCommodities/{classification}")
 	public Map<String, Object> selectClassifiedCommodities(@PathVariable String classification){
 		Map<String, Object> map = new HashMap<>();
-		if(!classification.equals("")&&classification.equals("chineseFood")) {
+		if(!classification.equals("")&&classification.equals("1")) {
+			map.clear();
 			List<Shop> list = indexService.selectClassifiedCommodities("中餐");
 			map.put("list", list);
-		}else if(!classification.equals("")&&classification.equals("europeanFood")){
-			
-			
-		}else if(!classification.equals("")&&classification.equals("dessert")) {
-			
-		}else if(!classification.equals("")&&classification.equals("barbecue")) {
-			
-		}else if(!classification.equals("")&&classification.equals("fruits")) {
-			
-		}else if(!classification.equals("")&&classification.equals("japaneseCuisine")) {
-			
+		}else if(!classification.equals("")&&classification.equals("2")){
+			map.clear();
+			List<Shop> list = indexService.selectClassifiedCommodities("西餐");
+			map.put("list", list);
+		}else if(!classification.equals("")&&classification.equals("3")) {
+			map.clear();
+			List<Shop> list = indexService.selectClassifiedCommodities("甜品");
+			map.put("list", list);
+		}else if(!classification.equals("")&&classification.equals("4")) {
+			map.clear();
+			List<Shop> list = indexService.selectClassifiedCommodities("烧烤");
+			map.put("list", list);
+		}else if(!classification.equals("")&&classification.equals("5")) {
+			map.clear();
+			List<Shop> list = indexService.selectClassifiedCommodities("果蔬生鲜");
+			map.put("list", list);
+		}else if(!classification.equals("")&&classification.equals("6")) {
+			map.clear();
+			List<Shop> list = indexService.selectClassifiedCommodities("日韩料理");
+			map.put("list", list);
 		}
-		
 		return map;
 	}
 	
+	//商铺管理(判断是否为商家)
+	@ResponseBody
+	@RequestMapping("/businessManagement")
+	public String businessManagement(HttpSession session){
+		User user = (User) session.getAttribute("user");
+		String telephone = user.getuTelephone();
+		List<Shop> list = indexService.selectShopBytelephone(telephone);
+		if(list != null && list.size()>0) {
+			return "1";
+		}
+		return "0";
+	}
 	
 }

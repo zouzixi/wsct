@@ -31,4 +31,8 @@ public interface IndexService {
 	
 	//根据商品分类查询商品
 	public List<Shop> selectClassifiedCommodities(String sClassification);
+	
+	//根据手机号查找
+	public List<Shop> selectShopBytelephone(String telephone);
+	
 }

@@ -11,6 +11,11 @@
     <result column="sm_details" property="smDetails" jdbcType="VARCHAR" />
     <result column="sm_image" property="smImage" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <select id="selectShopMenu" resultType="map">
+  	SELECT sm.sm_image,sm.sm_dishName,sm.sm_price,sm.sm_stock,sm.sm_details FROM `shop` AS s LEFT JOIN shop_menu AS sm ON s.s_id = sm.s_id WHERE s.s_telephone = #{sTelephone}
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

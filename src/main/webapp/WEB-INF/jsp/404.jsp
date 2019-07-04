@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>超个性的html404错误页面模板源码 - 代码库</title>
+		<title>404</title>
 		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dmaku.css" />	
 	</head>
 	<body>

@@ -17,6 +17,11 @@
     <result column="s_image" property="sImage" jdbcType="VARCHAR" />
     <result column="s_classification" property="sClassification" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <update id="updateShopInfo">
+  	UPDATE `shop` SET  s_shopName = #{sShopname} ,s_address = #{sAddress},s_telephone = #{sTelephone},s_introduce = #{sIntroduce},s_image = #{sImage} WHERE s_telephone = #{oldPhone}
+  </update>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

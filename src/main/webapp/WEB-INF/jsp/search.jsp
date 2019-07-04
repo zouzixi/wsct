@@ -33,19 +33,19 @@
   	<span>欢迎您，<span style="color: red;font-weight: bolder;">${user.uTelephone}</span>的用户！</span>&nbsp;&nbsp;
   	<a href="${pageContext.request.contextPath}/user/exit">注销</a>&nbsp;&nbsp;
   </c:if>
-   <div class="RightNav">
-    <a href="user_center.html">用户中心</a> <a href="user_orderlist.html" target="_blank" title="我的订单">我的订单</a> <a href="cart.html">购物车（0）</a> <a href="user_favorites.html" target="_blank" title="我的收藏">我的收藏</a> <a href="#">商家入驻</a>
+   <div class="RightNav" style="width: 400px;font-weight: bolder;">
+    <a href="user_center.html">用户中心</a> <a href="user_orderlist.html" target="_blank" title="我的订单">我的订单</a> <a href="cart.html">购物车（0）</a> <a href="user_favorites.html" target="_blank" title="我的收藏">我的收藏</a>
    </div>
   </div>
  </section>
  <div class="Logo_search">
   <div class="Logo">
-   <img src="${pageContext.request.contextPath}/images/logo.jpg" title="DeathGhost" alt="模板">
+<a href="${pageContext.request.contextPath}/page/index"><img src="${pageContext.request.contextPath}/images/logo.jpg" title="DeathGhost"></a>
    <i></i>
-   	<div data-toggle="distpicker" style="display: inline">
-	    <select id="eprovinceName" data-province="湖北省" name="provinceName" style="width: 80px;"></select>
-	    <select id="ecityName" data-city="武汉市" name="cityName" style="width: 80px;"></select>
-	    <select id="edistrictName" data-district="江汉区" name="districtName" style="width: 80px;"></select>
+   	<div data-toggle="distpicker" style="display: inline;">
+	    <select id="eprovinceName" data-province="湖北省" name="provinceName" style="width: 80px;border-radius:5px;border:1px solid #9bc0dd;height:28px;background:#fafdfe;"></select>
+	    <select id="ecityName" data-city="武汉市" name="cityName" style="width: 80px;border-radius:5px;border:1px solid #9bc0dd;height:28px;background:#fafdfe;"></select>
+	    <select id="edistrictName" data-district="江汉区" name="districtName" style="width: 80px;border-radius:5px;border:1px solid #9bc0dd;height:28px;background:#fafdfe;"></select>
 	</div>
   </div>
   <div class="Search"> 

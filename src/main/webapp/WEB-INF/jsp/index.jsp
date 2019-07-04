@@ -5,14 +5,13 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<title>网上餐厅</title>
-<meta name="keywords" content="DeathGhost,DeathGhost.cn,web前端设,移动WebApp开发" />
-<meta name="description" content="DeathGhost.cn::H5 WEB前端设计开发!" />
-<meta name="author" content="DeathGhost"/>
+<title>网上餐厅,开始用膳！</title>
 <link href="${pageContext.request.contextPath}/style/style.css" rel="stylesheet" type="text/css" />
+<link href="${pageContext.request.contextPath}/css/lunbo.css" rel="stylesheet" type="text/css" />
 <%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.js"></script> --%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/public.js"></script>
 <%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/jqpublic.js"></script> --%>
+
 <!-- 省市区联动插件，勿动 -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/Jquery-V3.2.1.js"></script>
 <script src="${pageContext.request.contextPath}/js/distpicker.data.js"></script>
@@ -20,12 +19,12 @@
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
 <!-- 省市区联动插件，勿动 -->
 <script src="${pageContext.request.contextPath}/js/scroll.js"></script>
+<!-- 轮播 -->
 <!-- 获取省份 -->
-<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script> 
-<script type="text/javascript">  
-var cname = returnCitySN["cname"];	//定义城市
-
-</script>
+<!-- <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>  -->
+<!-- <script type="text/javascript">   -->
+<!--  var cname = returnCitySN["cname"];	//定义城市 -->
+<!-- </script> -->
 <script>
 	$(function(){
 		//公告栏
@@ -94,7 +93,7 @@ var cname = returnCitySN["cname"];	//定义城市
 			})
 			$(".bestshop").html(html);
 		},"json");
-		//
+		//商铺
 		$.post("${pageContext.request.contextPath}/index/selectShops",function(data){
 			var shtml = "";
 			var scorehtml = "";
@@ -177,9 +176,9 @@ var cname = returnCitySN["cname"];	//定义城市
 		},"json");
 		
 	});//jq底部
-	function chineseFood(){
+	function foodClass(food){
 		$("#Shop").click();
-		$.post("${pageContext.request.contextPath}/index/selectClassifiedCommodities/chineseFood",function(data){
+		$.post("${pageContext.request.contextPath}/index/selectClassifiedCommodities/"+food+"",function(data){
 			var shtml = "";
 			var scorehtml = "";
 			$.each(data.list,function(i,v){
@@ -246,6 +245,84 @@ var cname = returnCitySN["cname"];	//定义城市
 			$(".DCcontent").html(shtml);
 		},"json")
 	}
+	
+	//商业管理
+	function businessManagement(){
+		$.post("${pageContext.request.contextPath}/index/businessManagement",function(data){
+			if(data == "1"){
+				window.location.href="${pageContext.request.contextPath}/page/businessBackstage";
+			}else{
+				window.location.href="${pageContext.request.contextPath}/page/NonMerchant";
+			}
+		},"json");
+	}
+	
+</script>
+<script>
+	window.onblur = function(){
+		document.title = "网上餐厅,记得回来下单哦！";
+	}
+	window.onfocus= function(){
+		document.title = "网上餐厅,开始用膳！";
+	}
+</script>
+<!-- 轮播 -->
+<script type=text/javascript src="${pageContext.request.contextPath}/js/lunbo.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+  $(".area").hover(function(){
+
+	  $(this).find(".qq").show(100);}
+
+	  ,function(){
+
+		$(this).find(".qq").hide(100);
+
+	});
+
+});
+
+</script>
+<script>
+    (function (T, h, i, n, k, P, a, g, e) {
+        g = function () {
+            P = h.createElement(i);
+            a = h.getElementsByTagName(i)[0];
+            P.src = k;
+            P.charset = "utf-8";
+            P.async = 1;
+            a.parentNode.insertBefore(P, a)
+        };
+        T["ThinkPageWeatherWidgetObject"] = n;
+        T[n] || (T[n] = function () {
+            (T[n].q = T[n].q || []).push(arguments)
+        });
+        T[n].l = +new Date();
+        if (T.attachEvent) {
+            T.attachEvent("onload", g)
+        } else {
+            T.addEventListener("load", g, false)
+        }
+    }(window, document, "script", "tpwidget", "//widget.seniverse.com/widget/chameleon.js"))
+</script>
+<script>
+    tpwidget("init", {
+        "flavor": "slim",
+        "location": "WX4FBXXFKE4F",
+        "geolocation": "enabled",
+        "language": "zh-chs",
+        "unit": "c",
+        "theme": "chameleon",
+        "container": "tp-weather-widget",
+        "bubble": "enabled",
+        "alarmType": "badge",
+        "color": "#FFFFFF",
+        "uid": "UB6953924F",
+        "hash": "ce68b5b7b447ec5bda327f8c9c2d59f9"
+    });
+    tpwidget("show");
 </script>
 </head>
 <body>
@@ -254,6 +331,7 @@ var cname = returnCitySN["cname"];	//定义城市
 .myscroll { width: 300px; height: 310px; margin: 0 auto; border: 1px solid #ccc; line-height: 26px; font-size: 12px; overflow: hidden;}
 .myscroll li { height: 26px; margin-left: 25px;}
 </style>
+
 <header>
  <section class="Topmenubg">
   <div class="Topnav">
@@ -265,20 +343,22 @@ var cname = returnCitySN["cname"];	//定义城市
   <c:if test="${!empty user }">
   	<span>欢迎您，<span style="color: red;font-weight: bolder;">${user.uTelephone}</span>的用户！</span>&nbsp;&nbsp;
   	<a href="${pageContext.request.contextPath}/user/exit">注销</a>&nbsp;&nbsp;
+<!-- 天气 -->
+  	<div id="tp-weather-widget" style="background: #CFCFCF;width: 100px;height:40px;border-radius:4px;display:inline-block;position: absolute;top: -3px" ></div>
   </c:if>
-   <div class="RightNav">
-    <a href="${pageContext.request.contextPath}/page/user_account">用户中心</a> <a href="${pageContext.request.contextPath}/page/user_orderlist" target="_blank" title="我的订单">我的订单</a> <a href="${pageContext.request.contextPath}/page/cart">购物车（0）</a> <a href="${pageContext.request.contextPath}/page/user_favorites" target="_blank" title="我的收藏">我的收藏</a> <a href="#">商家入驻</a>
+   <div class="RightNav" style="width: 400px;font-weight: bolder;">
+    <a href="${pageContext.request.contextPath}/page/user_account">用户中心</a> <a href="${pageContext.request.contextPath}/page/user_orderlist" target="_blank" title="我的订单">我的订单</a> <a href="${pageContext.request.contextPath}/page/cart">购物车（0）</a> <a href="${pageContext.request.contextPath}/page/user_favorites" target="_blank" title="我的收藏">我的收藏</a> <a href="#" onclick="businessManagement()">商家管理</a>
    </div>
   </div>
  </section>
  <div class="Logo_search">
   <div class="Logo"">
-   <a href="${pageContext.request.contextPath}/page/index"><img src="${pageContext.request.contextPath}/images/logo.jpg" title="DeathGhost" alt="模板"></a>
+   <a href="${pageContext.request.contextPath}/page/index"><img src="${pageContext.request.contextPath}/images/logo.jpg" title="DeathGhost"></a>
    <i></i>
-	<div data-toggle="distpicker" style="display: inline">
-	    <select id="eprovinceName" data-province="湖北省" name="provinceName" style="width: 80px;"></select>
-	    <select id="ecityName" data-city="武汉市" name="cityName" style="width: 80px;"></select>
-	    <select id="edistrictName" data-district="江汉区" name="districtName" style="width: 80px;"></select>
+	<div data-toggle="distpicker" style="display: inline;">
+	    <select id="eprovinceName" data-province="湖北省" name="provinceName" style="width: 80px;border-radius:5px;border:1px solid #9bc0dd;height:28px;background:#fafdfe;"></select>
+	    <select id="ecityName" data-city="武汉市" name="cityName" style="width: 80px;border-radius:5px;border:1px solid #9bc0dd;height:28px;background:#fafdfe;"></select>
+	    <select id="edistrictName" data-district="江汉区" name="districtName" style="width: 80px;border-radius:5px;border:1px solid #9bc0dd;height:28px;background:#fafdfe;"></select>
 	</div>
 </div>
   <div class="Search"> 
@@ -314,12 +394,36 @@ var cname = returnCitySN["cname"];	//定义城市
   <a href="list.html" target="_blank"><img src="${pageContext.request.contextPath}/images/by_button.png"></a>
   <a href="list.html" target="_blank"><img src="${pageContext.request.contextPath}/images/dc_button.png"></a>
  </aside>
+<!--  轮播图 -->
  <div class="F-middle">
- <ul class="rslides f426x240">
-        <li><a href="javascript:"><img src="${pageContext.request.contextPath}/upload/01.jpg"/></a></li>
-        <li><a href="javascript:"><img src="${pageContext.request.contextPath}/upload/02.jpg" /></a></li>
-        <li><a href="javascript:"><img src="${pageContext.request.contextPath}/upload/03.jpg"/></a></li>
-    </ul>
+	<div class="area">
+	<a id=prev class="prevBtn qq" href="javascript:void(0)"></a>
+	<a id=next class="nextBtn qq" href="javascript:void(0)"></a>
+	<div id=js class="js">
+		<div class="box01">
+
+			<img onClick="#"  src="${pageContext.request.contextPath}/upload/lunbo1.jpg">
+
+			<img onClick="#"  style="DISPLAY: none" src="${pageContext.request.contextPath}/upload/lunbo3.jpg"> 
+
+			<img onClick="#" style="DISPLAY: none"  src="${pageContext.request.contextPath}/upload/lunbo4.jpg">
+
+			<img onClick="#" style="DISPLAY: none"  src="${pageContext.request.contextPath}/upload/lunbo5.jpg"> 
+
+			<img onClick="#" style="DISPLAY: none" src="${pageContext.request.contextPath}/upload/lunbo6.jpg">	
+
+		</div>
+		<div class="bg"></div>
+		<div id=jsNav class=jsNav>	
+			<a class="trigger imgSelected" href="javascript:void(0)"></a>
+			<a class="trigger" href="javascript:void(0)"></a>
+			<a class="trigger" href="javascript:void(0)"></a>
+			<a class="trigger" href="javascript:void(0)"></a>
+			<a class="trigger" href="javascript:void(0)"></a>		
+		</div>
+	</div>
+
+</div>
  </div>
  <aside class="N-right">
   <div class="N-title">最新消息 <i>NEWS</i></div>
@@ -341,12 +445,12 @@ var cname = returnCitySN["cname"];	//定义城市
     <li class="current">点菜</li>
     <li id="Shop">餐馆</li>
     <p class="class_B">
-    <a href="javascript:void(0)" onclick="chineseFood()">中餐</a>
-    <a href="${pageContext.request.contextPath}/index/selectClassifiedCommodities/europeanFood">西餐</a>
-    <a href="${pageContext.request.contextPath}/index/selectClassifiedCommodities/dessert">甜点</a>
-    <a href="${pageContext.request.contextPath}/index/selectClassifiedCommodities/barbecue">烧烤</a>
-    <a href="${pageContext.request.contextPath}/index/selectClassifiedCommodities/fruits">果蔬生鲜</a>
-    <a href="${pageContext.request.contextPath}/index/selectClassifiedCommodities/japaneseCuisine">日韩料理</a>
+    <a href="javascript:void(0)" onclick="foodClass(1)">中餐</a>
+    <a href="javascript:void(0)" onclick="foodClass(2)">西餐</a>
+    <a href="javascript:void(0)" onclick="foodClass(3)">甜品</a>
+    <a href="javascript:void(0)" onclick="foodClass(4)">烧烤</a>
+    <a href="javascript:void(0)" onclick="foodClass(5)">果蔬生鲜</a>
+    <a href="javascript:void(0)" onclick="foodClass(6)">日韩料理</a>
     </p>
    </ul>
   <div id="Indexcontent">

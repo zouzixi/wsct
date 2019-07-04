@@ -27,4 +27,6 @@ public interface ShopMapper {
     int updateByPrimaryKeySelective(Shop record);
 
     int updateByPrimaryKey(Shop record);
+    
+    int updateShopInfo(@Param("sShopname") String sShopname,@Param("sAddress") String sAddress,@Param("sTelephone") String sTelephone,@Param("sIntroduce") String sIntroduce,@Param("sImage") String sImage,@Param("oldPhone") String oldPhone);
 }

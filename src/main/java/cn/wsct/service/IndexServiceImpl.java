@@ -101,5 +101,15 @@ public class IndexServiceImpl implements IndexService{
 		List<Shop> preList = shopMapper.selectByExample(example);
 		List<Shop> list = RandomValue.randomTopic(preList, 6);
 		return list;
+	}
+
+	//根据手机号判断是否为商家
+	@Override
+	public List<Shop> selectShopBytelephone(String telephone) {
+		ShopExample example = new ShopExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andSTelephoneEqualTo(telephone);
+		List<Shop> list = shopMapper.selectByExample(example);
+		return list;
 	}	
 }

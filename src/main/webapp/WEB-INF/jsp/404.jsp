@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>404</title>
+		<title>出错啦|网上订餐</title>
 		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dmaku.css" />	
 	</head>
 	<body>

@@ -3,6 +3,7 @@
 <mapper namespace="cn.wsct.dao.OrderMapper" >
   <resultMap id="BaseResultMap" type="cn.wsct.pojo.Order" >
     <id column="o_id" property="oId" jdbcType="INTEGER" />
+    <result column="sm_id" property="smId" jdbcType="INTEGER" />
     <result column="o_telephone" property="oTelephone" jdbcType="VARCHAR" />
     <result column="o_orderTime" property="oOrdertime" jdbcType="TIMESTAMP" />
     <result column="o_username" property="oUsername" jdbcType="VARCHAR" />
@@ -10,6 +11,15 @@
     <result column="o_status" property="oStatus" jdbcType="INTEGER" />
     <result column="o_number" property="oNumber" jdbcType="INTEGER" />
   </resultMap>
+  
+  <select id="selectNewOrders" resultType="map">
+  	SELECT o.o_id,sm.sm_dishName,o.o_number,o.o_telephone,o.o_orderTime,o.o_username,o.o_money FROM `order` AS o LEFT JOIN `shop_menu` AS sm ON o.sm_id = sm.sm_id LEFT JOIN `shop` AS s ON sm.s_id =s.s_id WHERE s.s_telephone = #{sTelephone} AND o.o_status = '1'
+  </select>
+  
+  <update id="deliverGoods">
+  	UPDATE `order` SET o_status = '2' WHERE o_id = #{oId}
+  </update>
+  
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -69,7 +79,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    o_id, o_telephone, o_orderTime, o_username, o_money, o_status, o_number
+    o_id, sm_id, o_telephone, o_orderTime, o_username, o_money, o_status, o_number
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.wsct.pojo.OrderExample" >
     select
@@ -102,18 +112,21 @@
     </if>
   </delete>
   <insert id="insert" parameterType="cn.wsct.pojo.Order" >
-    insert into order (o_id, o_telephone, o_orderTime, 
-      o_username, o_money, o_status, 
-      o_number)
-    values (#{oId,jdbcType=INTEGER}, #{oTelephone,jdbcType=VARCHAR}, #{oOrdertime,jdbcType=TIMESTAMP}, 
-      #{oUsername,jdbcType=VARCHAR}, #{oMoney,jdbcType=DOUBLE}, #{oStatus,jdbcType=INTEGER}, 
-      #{oNumber,jdbcType=INTEGER})
+    insert into order (o_id, sm_id, o_telephone, 
+      o_orderTime, o_username, o_money, 
+      o_status, o_number)
+    values (#{oId,jdbcType=INTEGER}, #{smId,jdbcType=INTEGER}, #{oTelephone,jdbcType=VARCHAR}, 
+      #{oOrdertime,jdbcType=TIMESTAMP}, #{oUsername,jdbcType=VARCHAR}, #{oMoney,jdbcType=DOUBLE}, 
+      #{oStatus,jdbcType=INTEGER}, #{oNumber,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.wsct.pojo.Order" >
     insert into order
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="oId != null" >
         o_id,
+      </if>
+      <if test="smId != null" >
+        sm_id,
       </if>
       <if test="oTelephone != null" >
         o_telephone,
@@ -137,6 +150,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="oId != null" >
         #{oId,jdbcType=INTEGER},
+      </if>
+      <if test="smId != null" >
+        #{smId,jdbcType=INTEGER},
       </if>
       <if test="oTelephone != null" >
         #{oTelephone,jdbcType=VARCHAR},
@@ -170,6 +186,9 @@
       <if test="record.oId != null" >
         o_id = #{record.oId,jdbcType=INTEGER},
       </if>
+      <if test="record.smId != null" >
+        sm_id = #{record.smId,jdbcType=INTEGER},
+      </if>
       <if test="record.oTelephone != null" >
         o_telephone = #{record.oTelephone,jdbcType=VARCHAR},
       </if>
@@ -196,6 +215,7 @@
   <update id="updateByExample" parameterType="map" >
     update order
     set o_id = #{record.oId,jdbcType=INTEGER},
+      sm_id = #{record.smId,jdbcType=INTEGER},
       o_telephone = #{record.oTelephone,jdbcType=VARCHAR},
       o_orderTime = #{record.oOrdertime,jdbcType=TIMESTAMP},
       o_username = #{record.oUsername,jdbcType=VARCHAR},
@@ -209,6 +229,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="cn.wsct.pojo.Order" >
     update order
     <set >
+      <if test="smId != null" >
+        sm_id = #{smId,jdbcType=INTEGER},
+      </if>
       <if test="oTelephone != null" >
         o_telephone = #{oTelephone,jdbcType=VARCHAR},
       </if>
@@ -232,7 +255,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.wsct.pojo.Order" >
     update order
-    set o_telephone = #{oTelephone,jdbcType=VARCHAR},
+    set sm_id = #{smId,jdbcType=INTEGER},
+      o_telephone = #{oTelephone,jdbcType=VARCHAR},
       o_orderTime = #{oOrdertime,jdbcType=TIMESTAMP},
       o_username = #{oUsername,jdbcType=VARCHAR},
       o_money = #{oMoney,jdbcType=DOUBLE},

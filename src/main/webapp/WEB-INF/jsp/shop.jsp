@@ -177,7 +177,7 @@ window.onload = function () {
          </a>
           <a href="#" class="item">
 		 <div>
-		  <p>酸辣土豆丝</p>
+		  <p>红烧鱼</p>
 		  <p class="AButton">拖至购物车:￥50.00</p>
 		 </div>
 		 </a>
@@ -188,7 +188,7 @@ window.onload = function () {
          </a>
           <a href="#" class="item">
 		 <div>
-		  <p>酸辣土豆丝</p>
+		  <p>水煮鱼</p>
 		  <p class="AButton">拖至购物车:￥50.00</p>
 		 </div>
 		 </a>
@@ -199,7 +199,7 @@ window.onload = function () {
          </a>
           <a href="#" class="item">
 		 <div>
-		  <p>酸辣土豆丝</p>
+		  <p>豆角肉丝</p>
 		  <p class="AButton">拖至购物车:￥50.00</p>
 		 </div>
 		 </a>
@@ -210,7 +210,7 @@ window.onload = function () {
          </a>
           <a href="#" class="item">
 		 <div>
-		  <p>酸辣土豆丝</p>
+		  <p>手撕面包</p>
 		  <p class="AButton">拖至购物车:￥50.00</p>
 		 </div>
 		 </a>
@@ -236,7 +236,7 @@ window.onload = function () {
       </div>
       <div class="C-content">
        <q>还不错，速度挺快,还不错，速度挺快还不错，速度挺快还不错，速度挺快还不错，速度挺快还不错，速度挺快还不错，速度挺快。。。</q>
-       <i>2014年09月17日 19:36 </i>
+       <i>2019年07月1日 19:36 </i>
       </div>
       <div class="username">
       DeatGhost

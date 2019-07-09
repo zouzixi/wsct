@@ -12,8 +12,12 @@
     <result column="sm_image" property="smImage" jdbcType="VARCHAR" />
   </resultMap>
   
+  <update id="operatingCommodities">
+  	UPDATE shop_menu SET sm_stock = #{smStock} WHERE sm_id = #{smId}
+  </update>
+  
   <select id="selectShopMenu" resultType="map">
-  	SELECT sm.sm_image,sm.sm_dishName,sm.sm_price,sm.sm_stock,sm.sm_details FROM `shop` AS s LEFT JOIN shop_menu AS sm ON s.s_id = sm.s_id WHERE s.s_telephone = #{sTelephone}
+  	SELECT sm.sm_image,sm.sm_dishName,sm.sm_price,sm.sm_stock,sm.sm_details,sm.sm_id FROM `shop` AS s LEFT JOIN shop_menu AS sm ON s.s_id = sm.s_id WHERE s.s_telephone = #{sTelephone}
   </select>
   
   <sql id="Example_Where_Clause" >

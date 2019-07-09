@@ -165,6 +165,66 @@ public class OrderExample {
             return (Criteria) this;
         }
 
+        public Criteria andSmIdIsNull() {
+            addCriterion("sm_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdIsNotNull() {
+            addCriterion("sm_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdEqualTo(Integer value) {
+            addCriterion("sm_id =", value, "smId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdNotEqualTo(Integer value) {
+            addCriterion("sm_id <>", value, "smId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdGreaterThan(Integer value) {
+            addCriterion("sm_id >", value, "smId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("sm_id >=", value, "smId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdLessThan(Integer value) {
+            addCriterion("sm_id <", value, "smId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdLessThanOrEqualTo(Integer value) {
+            addCriterion("sm_id <=", value, "smId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdIn(List<Integer> values) {
+            addCriterion("sm_id in", values, "smId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdNotIn(List<Integer> values) {
+            addCriterion("sm_id not in", values, "smId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdBetween(Integer value1, Integer value2) {
+            addCriterion("sm_id between", value1, value2, "smId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("sm_id not between", value1, value2, "smId");
+            return (Criteria) this;
+        }
+
         public Criteria andOTelephoneIsNull() {
             addCriterion("o_telephone is null");
             return (Criteria) this;

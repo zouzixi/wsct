@@ -14,4 +14,7 @@ public interface UserService {
 	
 	//判断是否已经存在该用户
 	public List<User> selectExist(String telephone);
+	
+	//修改用户密码
+	public int updatePassword(User user);
 }

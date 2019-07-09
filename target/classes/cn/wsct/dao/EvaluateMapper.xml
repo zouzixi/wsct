@@ -5,10 +5,13 @@
     <id column="e_id" property="eId" jdbcType="INTEGER" />
     <result column="sm_id" property="smId" jdbcType="INTEGER" />
     <result column="e_comment" property="eComment" jdbcType="VARCHAR" />
+    <result column="u_telephone" property="uTelephone" jdbcType="VARCHAR" />
+    <result column="e_datetime" property="eDatetime" jdbcType="TIMESTAMP" />
   </resultMap>
+  
   <select id="selectEvaluate" resultType="map">
   	SELECT us.u_telephone,ev.e_comment,sh.s_shopName,sm.sm_image,sm.sm_dishName FROM `evaluate` AS ev LEFT JOIN `user` AS us on us.u_telephone = ev.u_telephone LEFT JOIN shop_menu AS sm ON sm.sm_id = ev.sm_id LEFT JOIN shop AS sh ON sh.s_id = sm.s_id;
-  </select>
+  </select>  
   
   <sql id="Example_Where_Clause" >
     <where >
@@ -69,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    e_id, sm_id, e_comment
+    e_id, sm_id, e_comment, u_telephone, e_datetime
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.wsct.pojo.EvaluateExample" >
     select
@@ -102,10 +105,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="cn.wsct.pojo.Evaluate" >
-    insert into evaluate (e_id, sm_id, e_comment
-      )
-    values (#{eId,jdbcType=INTEGER}, #{smId,jdbcType=INTEGER}, #{eComment,jdbcType=VARCHAR}
-      )
+    insert into evaluate (e_id, sm_id, e_comment, 
+      u_telephone, e_datetime)
+    values (#{eId,jdbcType=INTEGER}, #{smId,jdbcType=INTEGER}, #{eComment,jdbcType=VARCHAR}, 
+      #{uTelephone,jdbcType=VARCHAR}, #{eDatetime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.wsct.pojo.Evaluate" >
     insert into evaluate
@@ -119,6 +122,12 @@
       <if test="eComment != null" >
         e_comment,
       </if>
+      <if test="uTelephone != null" >
+        u_telephone,
+      </if>
+      <if test="eDatetime != null" >
+        e_datetime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="eId != null" >
@@ -129,6 +138,12 @@
       </if>
       <if test="eComment != null" >
         #{eComment,jdbcType=VARCHAR},
+      </if>
+      <if test="uTelephone != null" >
+        #{uTelephone,jdbcType=VARCHAR},
+      </if>
+      <if test="eDatetime != null" >
+        #{eDatetime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -150,6 +165,12 @@
       <if test="record.eComment != null" >
         e_comment = #{record.eComment,jdbcType=VARCHAR},
       </if>
+      <if test="record.uTelephone != null" >
+        u_telephone = #{record.uTelephone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eDatetime != null" >
+        e_datetime = #{record.eDatetime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -159,7 +180,9 @@
     update evaluate
     set e_id = #{record.eId,jdbcType=INTEGER},
       sm_id = #{record.smId,jdbcType=INTEGER},
-      e_comment = #{record.eComment,jdbcType=VARCHAR}
+      e_comment = #{record.eComment,jdbcType=VARCHAR},
+      u_telephone = #{record.uTelephone,jdbcType=VARCHAR},
+      e_datetime = #{record.eDatetime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -173,13 +196,21 @@
       <if test="eComment != null" >
         e_comment = #{eComment,jdbcType=VARCHAR},
       </if>
+      <if test="uTelephone != null" >
+        u_telephone = #{uTelephone,jdbcType=VARCHAR},
+      </if>
+      <if test="eDatetime != null" >
+        e_datetime = #{eDatetime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where e_id = #{eId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.wsct.pojo.Evaluate" >
     update evaluate
     set sm_id = #{smId,jdbcType=INTEGER},
-      e_comment = #{eComment,jdbcType=VARCHAR}
+      e_comment = #{eComment,jdbcType=VARCHAR},
+      u_telephone = #{uTelephone,jdbcType=VARCHAR},
+      e_datetime = #{eDatetime,jdbcType=TIMESTAMP}
     where e_id = #{eId,jdbcType=INTEGER}
   </update>
 </mapper>

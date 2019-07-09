@@ -5,6 +5,8 @@ import java.util.Date;
 public class Order {
     private Integer oId;
 
+    private Integer smId;
+
     private String oTelephone;
 
     private Date oOrdertime;
@@ -23,6 +25,14 @@ public class Order {
 
     public void setoId(Integer oId) {
         this.oId = oId;
+    }
+
+    public Integer getSmId() {
+        return smId;
+    }
+
+    public void setSmId(Integer smId) {
+        this.smId = smId;
     }
 
     public String getoTelephone() {

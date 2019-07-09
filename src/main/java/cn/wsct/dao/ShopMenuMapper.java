@@ -30,6 +30,9 @@ public interface ShopMenuMapper {
 
     int updateByPrimaryKey(ShopMenu record);
     
+    //根据商家手机号查询菜品信息
     List<Map<String, Object>> selectShopMenu(@Param("sTelephone") String sTelephone);
     
+    //根据smid上下架商品
+    int operatingCommodities(@Param("smId") String smId,@Param("smStock") String smStock);
 }

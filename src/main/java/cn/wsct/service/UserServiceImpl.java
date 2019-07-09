@@ -20,14 +20,16 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public List<User> loginUser(String telephone, String password) {
 		
+		String md5Password = DigestUtils.md5Hex(password);
 		UserExample example = new UserExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andUTelephoneEqualTo(telephone);
-		criteria.andUPasswordEqualTo(password);
+		criteria.andUPasswordEqualTo(md5Password);
 		List<User> list = userMapper.selectByExample(example);
 		return list;
 	}
 
+//	注册
 	@Override
 	public int registUser(String telephone, String password) {
 		String encryptedPassword = DigestUtils.md5Hex(password);
@@ -43,6 +45,12 @@ public class UserServiceImpl implements UserService{
 		criteria.andUTelephoneEqualTo(telephone);
 		List<User> list = userMapper.selectByExample(example);
 		return list;
+	}
+	//修改密码
+	@Override
+	public int updatePassword(User user) {
+		int result = userMapper.updateByPrimaryKey(user);
+		return result;
 	}
 
 }

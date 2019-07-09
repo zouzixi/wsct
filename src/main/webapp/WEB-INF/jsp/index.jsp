@@ -31,6 +31,7 @@
 		$.post("${pageContext.request.contextPath}/index/selectList",function(data){
 			var html = "";
 			var html_status = "";
+			var html_oUsername = "";
 			$.each(data.list,function(i,v){
  				if(this.oStatus == "1"){
  					//订单已发货
@@ -39,10 +40,14 @@
  					//已完成
 					html_status = "<i class='State02'>"+"已签收"+"</i>"+"<i class='State03'>"+"已点评"+"</i>";
  				}
-				
+				if(this.oUsername == ""){
+					html_oUsername = "匿名";
+				}else{
+					html_oUsername = this.oUsername;
+				}
 				html +="<li>"+
 				   "<p>订单编号："+ this.oId + "</p>"+
-				   "<p>收件人："+this.oUsername+"</p>"+
+				   "<p>收件人："+html_oUsername+"</p>"+
 				   "<p>订单状态："+html_status+"</p>"+
 				   "</li>";
 			})
@@ -260,7 +265,7 @@
 </script>
 <script>
 	window.onblur = function(){
-		document.title = "网上餐厅,记得回来下单哦！";
+		document.title = "记得回来下单哦！";
 	}
 	window.onfocus= function(){
 		document.title = "网上餐厅,开始用膳！";
@@ -285,45 +290,6 @@ $(document).ready(function(){
 });
 
 </script>
-<script>
-    (function (T, h, i, n, k, P, a, g, e) {
-        g = function () {
-            P = h.createElement(i);
-            a = h.getElementsByTagName(i)[0];
-            P.src = k;
-            P.charset = "utf-8";
-            P.async = 1;
-            a.parentNode.insertBefore(P, a)
-        };
-        T["ThinkPageWeatherWidgetObject"] = n;
-        T[n] || (T[n] = function () {
-            (T[n].q = T[n].q || []).push(arguments)
-        });
-        T[n].l = +new Date();
-        if (T.attachEvent) {
-            T.attachEvent("onload", g)
-        } else {
-            T.addEventListener("load", g, false)
-        }
-    }(window, document, "script", "tpwidget", "//widget.seniverse.com/widget/chameleon.js"))
-</script>
-<script>
-    tpwidget("init", {
-        "flavor": "slim",
-        "location": "WX4FBXXFKE4F",
-        "geolocation": "enabled",
-        "language": "zh-chs",
-        "unit": "c",
-        "theme": "chameleon",
-        "container": "tp-weather-widget",
-        "bubble": "enabled",
-        "alarmType": "badge",
-        "color": "#FFFFFF",
-        "uid": "UB6953924F",
-        "hash": "ce68b5b7b447ec5bda327f8c9c2d59f9"
-    });
-    tpwidget("show");
-</script>
 </head>
 <body>
 <style>
@@ -344,7 +310,6 @@ $(document).ready(function(){
   	<span>欢迎您，<span style="color: red;font-weight: bolder;">${user.uTelephone}</span>的用户！</span>&nbsp;&nbsp;
   	<a href="${pageContext.request.contextPath}/user/exit">注销</a>&nbsp;&nbsp;
 <!-- 天气 -->
-  	<div id="tp-weather-widget" style="background: #CFCFCF;width: 100px;height:40px;border-radius:4px;display:inline-block;position: absolute;top: -3px" ></div>
   </c:if>
    <div class="RightNav" style="width: 400px;font-weight: bolder;">
     <a href="${pageContext.request.contextPath}/page/user_account">用户中心</a> <a href="${pageContext.request.contextPath}/page/user_orderlist" target="_blank" title="我的订单">我的订单</a> <a href="${pageContext.request.contextPath}/page/cart">购物车（0）</a> <a href="${pageContext.request.contextPath}/page/user_favorites" target="_blank" title="我的收藏">我的收藏</a> <a href="#" onclick="businessManagement()">商家管理</a>
